@@ -26,10 +26,17 @@ namespace Server.Controllers
             return Created("", $"Player '{name}' was created");
         }
 
-        [HttpGet("Player/GetPlayers/Name")]
-        public ActionResult<string> GetClients(string name)
+        [HttpGet("Player/SetAsReady/{name}")]
+        public ActionResult<string> SetPlayerAsReady(string name)
         {
+            _gameSession.SetPlayerAsReady(name);
+            return NoContent();
+        }
 
+        [HttpGet("Game")]
+        public ActionResult<Game> GetGameInfo()
+        {
+            return Ok(_gameSession.GetGameDto());
         }
     }
 }

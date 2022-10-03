@@ -20,13 +20,15 @@ namespace Server.GameLogic
              return _instance;
          }
 
-         public void SetPlayerAsReady(Player client)
+         public void SetPlayerAsReady(string name)
          {
-            Player player = GameInfo.GetPlayer(client.Name);
+            Player player = GameInfo.GetPlayer(name);
             if(player == null)
-                throw new Exception($"Player {client.Name} doesn't participate in the game");
+                throw new Exception($"Player {name} doesn't participate in the game");
 
-             if (GameInfo.Player1.IsReadyToPlay && GameInfo.Player2.IsReadyToPlay && !GameHasStarted)
+            player.IsReadyToPlay = true;
+
+            if (GameInfo.Player1.IsReadyToPlay && GameInfo.Player2.IsReadyToPlay && !GameHasStarted)
                  StartGame();
          }
 
@@ -34,7 +36,18 @@ namespace Server.GameLogic
          {
              GameHasStarted = true;
              GameInfo.StartTime = DateTime.Now;
+             GameStartedNotifyPlayers();
          }
+
+        private void GameStartedNotifyPlayers()
+        {
+            
+        }
+
+        public Game GetGameDto()
+        {
+            return GameInfo;
+        }
 
          /// <summary>
          /// Try to add a player to a session
