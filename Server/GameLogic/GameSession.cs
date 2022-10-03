@@ -39,18 +39,26 @@ namespace Server.GameLogic
              GameInfo.StartTime = DateTime.Now;
          }
 
-        /// <summary>
-        /// Try to add a player to a session
-        /// </summary>
-        /// <param name="client"></param>
-        public void AddPlayer(Player client)
+         /// <summary>
+         /// Try to add a player to a session
+         /// </summary>
+         /// <param name="player"></param>\
+         /// <returns>Returns null if player was added and error message if player wasn't added</returns>
+         public string TryCreateAndAddPlayer(Player player)
          {
-             if (GameInfo.Player1 != null)
-                 GameInfo.Player1 = client;
-             else if (GameInfo.Player2 != null)
-                 GameInfo.Player2 = client;
+             if (GameInfo.Player1 == null)
+                 GameInfo.Player1 = player;
+             else if (GameInfo.Player2 == null)
+             {
+                 if (GameInfo.Player1.Name != player.Name)
+                     GameInfo.Player2 = player;
+                 else
+                     return $"Player with name {player.Name} already exists";
+             }
              else
-                 throw new Exception($"Player {client.Name} can't be added. Game already has two players");
+                 return "Two players are already added";
+
+             return null;
          }
     }
 }
