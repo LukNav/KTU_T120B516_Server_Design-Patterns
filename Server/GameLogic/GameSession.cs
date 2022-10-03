@@ -15,6 +15,11 @@ namespace Server.GameLogic
              GameInfo = new Game();
          }
 
+         public static GameSession GetInstance()
+         {
+             return _instance;
+         }
+
          public void SetPlayerAsReady(Player client)
          {
              if (GameInfo.Player1.Name == client.Name)

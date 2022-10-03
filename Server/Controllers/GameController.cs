@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Server.GameLogic;
 
 namespace Server.Controllers
 {
-    public class GameController : Controller
+    [Route("game/")]
+    [ApiController]
+    public class GameController : ControllerBase
     {
-        private GameSession _gameSession = new GameSession();
-        public IActionResult Index()
-        {
-            return View();
-        }
+        private GameSession _gameSession = GameSession.GetInstance();
+
+        
     }
 }
