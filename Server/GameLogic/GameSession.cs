@@ -22,12 +22,9 @@ namespace Server.GameLogic
 
          public void SetPlayerAsReady(Player client)
          {
-             if (GameInfo.Player1.Name == client.Name)
-                 GameInfo.Player1.IsReadyToPlay = true;
-             else if (GameInfo.Player2.Name == client.Name)
-                 GameInfo.Player2.IsReadyToPlay = true;
-             else
-                 throw new Exception($"Player {client.Name} doesn't participate in the game");
+            Player player = GameInfo.GetPlayer(client.Name);
+            if(player == null)
+                throw new Exception($"Player {client.Name} doesn't participate in the game");
 
              if (GameInfo.Player1.IsReadyToPlay && GameInfo.Player2.IsReadyToPlay && !GameHasStarted)
                  StartGame();

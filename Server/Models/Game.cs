@@ -13,5 +13,14 @@
         public Game()
         {
         }
+
+        public Player GetPlayer(string name)
+        {
+            if (Player1.Name == name)
+                return Player1;
+            else if (Player2.Name == name)
+                return Player2;
+            return null;
+        }
     }
 }

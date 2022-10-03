@@ -5,7 +5,6 @@ using Server.Models;
 
 namespace Server.Controllers
 {
-    [Route("Game/")]
     [ApiController]
     public class GameController : ControllerBase
     {
@@ -25,6 +24,12 @@ namespace Server.Controllers
                 return BadRequest(errorMessage);
 
             return Created("", $"Player '{name}' was created");
+        }
+
+        [HttpGet("Player/GetPlayers/Name")]
+        public ActionResult<string> GetClients(string name)
+        {
+
         }
     }
 }
