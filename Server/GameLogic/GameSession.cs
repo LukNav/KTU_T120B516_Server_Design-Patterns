@@ -1,4 +1,5 @@
-﻿using Server.Models;
+﻿using Server.Helpers;
+using Server.Models;
 
 namespace Server.GameLogic
 {
@@ -28,20 +29,26 @@ namespace Server.GameLogic
 
             player.IsReadyToPlay = true;
 
-            if (GameInfo.Player1.IsReadyToPlay && GameInfo.Player2.IsReadyToPlay && !GameHasStarted)
-                 StartGame();
+            if (GameInfo.Player1 != null && GameInfo.Player1.IsReadyToPlay
+                &&  GameInfo.Player2 != null && GameInfo.Player2.IsReadyToPlay 
+                && !GameHasStarted)
+            {
+                StartGame();
+            }
          }
 
          private void StartGame()
          {
              GameHasStarted = true;
              GameInfo.StartTime = DateTime.Now;
-             GameStartedNotifyPlayers();
+             GameStartedNotifyPlayers();//Send to each player updated Game info
          }
 
         private void GameStartedNotifyPlayers()
         {
-            
+            string endpoint = "/StartGame/";
+            HttpRequests.PostRequest(GameInfo.Player1.IpAddress+endpoint, GameInfo);
+            HttpRequests.PostRequest(GameInfo.Player2.IpAddress+endpoint, GameInfo);
         }
 
         public Game GetGameDto()

@@ -10,12 +10,12 @@ namespace Server.Controllers
     {
         private GameSession _gameSession = GameSession.GetInstance();
 
-        [HttpGet("Player/Create/{name}")]
-        public ActionResult<string> CreateClient(string name)
+        [HttpGet("Player/Create/{name}/{ip}")]
+        public ActionResult<string> CreateClient(string name, string ip)
         {
             Player player = new Player
             {
-                IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(), 
+                IpAddress = $"https://localhost:{ip}", 
                 Name = name
             };
 
@@ -27,10 +27,10 @@ namespace Server.Controllers
         }
 
         [HttpGet("Player/SetAsReady/{name}")]
-        public ActionResult<string> SetPlayerAsReady(string name)
+        public async Task<IActionResult> SetPlayerAsReady(string name)
         {
-            _gameSession.SetPlayerAsReady(name);
-            return NoContent();
+            Task.Run(() => _gameSession.SetPlayerAsReady(name));//Run task async, because the task below is dependant on this connection closing soon
+            return Ok();
         }
 
         [HttpGet("Game")]
