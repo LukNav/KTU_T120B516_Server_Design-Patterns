@@ -5,9 +5,13 @@
     /// </summary>
     public class Game
     {
-        public GameLevel? GameLevel { get; set; }
-        public Client? RedClient { get; set; }
-        public Client? GreenClient { get; set; }
+        public GameLevel GameLevel { get; set; }
+        public Player Player1 { get; set; }
+        public Player Player2 { get; set; }
         public DateTime StartTime { get; set; }
+
+        public Game()
+        {
+        }
     }
 }

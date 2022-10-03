@@ -10,7 +10,7 @@ namespace Server.Models
     /// </summary>
     public class Message
     {
-        public Client? Client { get; set; }
+        public Player? Client { get; set; }
         public string? Text { get; set; }
         public DateTime Time { get; set; }
     }
