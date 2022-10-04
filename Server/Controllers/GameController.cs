@@ -13,11 +13,9 @@ namespace Server.Controllers
         [HttpGet("Player/Create/{name}/{ip}")]
         public ActionResult<string> CreateClient(string name, string ip)
         {
-            Player player = new Player
-            {
-                IpAddress = $"https://localhost:{ip}", 
-                Name = name
-            };
+            PlayerFactory playerFactory = new PlayerFactory();
+
+            Player player = playerFactory.GetPlayer(name, ip);
 
             string errorMessage = _gameSession.TryCreateAndAddPlayer(player);
             if (errorMessage != null)//If errorMessage is not null, return bad request with error message
