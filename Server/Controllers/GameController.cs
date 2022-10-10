@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.GameLogic;
+using Server.GameLogic.Factories.Concrete;
 using Server.Models;
 
 namespace Server.Controllers
@@ -15,7 +16,7 @@ namespace Server.Controllers
         {
             PlayerFactory playerFactory = new PlayerFactory();
 
-            Player player = playerFactory.GetPlayer(name, ip);
+            Player player = playerFactory.Create(name, ip);
 
             string errorMessage = _gameSession.TryCreateAndAddPlayer(player);
             if (errorMessage != null)//If errorMessage is not null, return bad request with error message
