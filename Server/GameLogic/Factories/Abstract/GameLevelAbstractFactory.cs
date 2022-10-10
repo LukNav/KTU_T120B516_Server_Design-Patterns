@@ -18,11 +18,15 @@ namespace Server.GameLogic.Factories.Abstract
             TowerFactory=towerFactory;
         }
 
+        public GameLevel CreateGameLevel()
+        {
+            return new GameLevel(CreateTower(), CreatePawn1(), CreatePawn2(), CreatePawn3());
+        }
+
         public Tower CreateTower()
         {
             return TowerFactory.Create();
         }
-
         public Pawn CreatePawn1()
         {
             return PawnFactory1.Create();

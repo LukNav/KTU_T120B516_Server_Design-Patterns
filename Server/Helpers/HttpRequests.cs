@@ -22,7 +22,12 @@ namespace Server.Helpers
             };
 
             using (var httpClient = new HttpClient())
-                return httpClient.Send(httpRequestMessage);
+            {
+                var response = httpClient.Send(httpRequestMessage);
+                if ((int)response.StatusCode >= 400)
+                    throw new HttpRequestException(response.Message());
+                return response;
+            }
         }
 
         public static HttpResponseMessage PostRequest<T>(string Url, T body)
@@ -42,8 +47,13 @@ namespace Server.Helpers
             };
 
             using (var httpClient = new HttpClient())
-                return httpClient.Send(httpRequestMessage);
-            
+            {
+                var response = httpClient.Send(httpRequestMessage);
+                if ((int)response.StatusCode >= 400)
+                    throw new HttpRequestException(response.Message());
+                return response;
+            }
+
             return null;
         }
 

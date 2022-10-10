@@ -1,12 +1,13 @@
 ﻿using System.Drawing;
+using System.Numerics;
 using Server.GameLogic.Factories.Abstract;
 using Server.Models;
 
-namespace Server.GameLogic.Factories
+namespace Server.GameLogic.Factories.Concrete
 {
     public class PawnFactory : IPawnFactory
     {
-        public int Health {get;set;}
+        public int Health { get; set; }
         public int Cost { get; set; }
         public int Speed { get; set; }
         public int Damage { get; set; }
@@ -23,9 +24,9 @@ namespace Server.GameLogic.Factories
 
         public Pawn Create()
         {
-            return new Pawn(position: new Point(0, 0), imageName: ImageName,
+            return new Pawn(position: new Position(0, 0), imageName: ImageName,
                 health: Health, cost: Cost, speed: Speed, damage: Damage);
         }
     }
-    
+
 }

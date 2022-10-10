@@ -1,4 +1,5 @@
-﻿using Server.Helpers;
+﻿using Server.GameLogic.Factories.Abstract;
+using Server.Helpers;
 using Server.Models;
 
 namespace Server.GameLogic
@@ -19,7 +20,7 @@ namespace Server.GameLogic
          public static GameSession GetInstance()
          {
              return _instance;
-         }
+         } 
 
          public void SetPlayerAsReady(string name)
          {
@@ -33,14 +34,15 @@ namespace Server.GameLogic
                 &&  GameInfo.Player2 != null && GameInfo.Player2.IsReadyToPlay 
                 && !GameHasStarted)
             {
-                StartGame();
+                StartGame(FactoryPresets.CreateLevel1Factory());
             }
          }
 
-         private void StartGame()
+         private void StartGame(GameLevelAbstractFactory levelFactory)
          {
              GameHasStarted = true;
              GameInfo.StartTime = DateTime.Now;
+             GameInfo.GameLevel = levelFactory.CreateGameLevel();//Use abstract factory to create game level preset for both players
              GameStartedNotifyPlayers();//Send to each player updated Game info
          }
 

@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Numerics;
 using System.Security.Cryptography;
 using Server.GameLogic.Factories.Abstract;
 using Server.Models;
@@ -19,7 +20,7 @@ namespace Server.GameLogic.Factories.Concrete
 
         public Tower Create()
         {
-            return new Tower(new Point(0, 0), _imageName, _baseHealth);
+            return new Tower(new Position(0, 0), _imageName, _baseHealth);
         }
     }
 }
