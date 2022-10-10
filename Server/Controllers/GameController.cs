@@ -32,6 +32,16 @@ namespace Server.Controllers
             return Ok();
         }
 
+        [HttpGet("/Debug/StartGameSolo/{port}")]
+        public async Task<IActionResult> DebugStartSolo(string port)//Using this only to quickstart the game when debugging
+        {
+            CreateClient("0", port);
+            CreateClient("1", port);
+            Task.Run(() => _gameSession.StartGameDebug());
+
+            return Ok();
+        }
+
         [HttpGet("Game")]
         public ActionResult<Game> GetGameInfo()
         {

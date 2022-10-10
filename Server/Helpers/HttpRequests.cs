@@ -39,7 +39,7 @@ namespace Server.Helpers
                 Headers =
                 {
                     { HeaderNames.Accept, "*/*" },
-                    { HeaderNames.UserAgent, "ButtNet" }
+                    { HeaderNames.UserAgent, "Yes" }
                 },
                 Content = new StringContent(content,
                                     Encoding.UTF8,

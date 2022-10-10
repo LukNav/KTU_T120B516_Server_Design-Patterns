@@ -38,7 +38,18 @@ namespace Server.GameLogic
             }
          }
 
-         private void StartGame(GameLevelAbstractFactory levelFactory)
+        /// <summary>
+        /// Using this to quick-start the game when debugging
+        /// </summary>
+        public void StartGameDebug()
+        {
+            GameHasStarted = true;
+            GameInfo.StartTime = DateTime.Now;
+            GameInfo.GameLevel = FactoryPresets.CreateLevel1Factory().CreateGameLevel();
+            HttpRequests.PostRequest(GameInfo.Player1.IpAddress+"/StartGame/", GameInfo);
+        }
+
+        private void StartGame(GameLevelAbstractFactory levelFactory)
          {
              GameHasStarted = true;
              GameInfo.StartTime = DateTime.Now;
