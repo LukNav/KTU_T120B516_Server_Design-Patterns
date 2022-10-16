@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Server.GameLogic;
 using Server.GameLogic.Factories.Concrete;
 using Server.Models;
+using System.Timers;
 
 namespace Server.Controllers
 {
@@ -46,6 +47,19 @@ namespace Server.Controllers
         public ActionResult<Game> GetGameInfo()
         {
             return Ok(_gameSession.GetGameDto());
+        }
+
+        [HttpGet("GameGrid/UpdateGame")]
+        public async Task<IActionResult> UpdateGameGrid(GameGrid newGrid)
+        {
+            Task.Run(() => _gameSession.UpdateGameGrid(newGrid));//Run task async, because the task below is dependant on this connection closing soon
+            return Ok();
+        }
+
+        [HttpGet("GameGrid")]
+        public ActionResult<GameGrid> GetGameGrid()
+        {
+            return Ok(_gameSession.GetGameGridData());
         }
     }
 }

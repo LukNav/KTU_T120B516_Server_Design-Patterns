@@ -12,9 +12,13 @@ namespace Server.GameLogic
 
          private bool GameHasStarted = false;
 
+         //Isivaizduoju sitaip updatinti galima butu zaidimo busena, bet HTTP yra dalykas kurio visiskai nesuprantu. - Maksas
+         private GameGrid GameGrid;
+
          private GameSession()
          {
              GameInfo = new Game();
+             GameGrid = new GameGrid();
          }
 
          public static GameSession GetInstance()
@@ -67,6 +71,18 @@ namespace Server.GameLogic
         public Game GetGameDto()
         {
             return GameInfo;
+        }
+
+        //Isivaizduoju sitaip updatinti galima butu zaidimo busena, bet HTTP yra dalykas kurio visiskai nesuprantu. - Maksas
+        public GameGrid GetGameGridData()
+        {
+            return GameGrid;
+        }
+
+        //Isivaizduoju sitaip updatinti galima butu zaidimo busena, bet HTTP yra dalykas kurio visiskai nesuprantu. - Maksas
+        public void UpdateGameGrid(GameGrid newGrid)
+        {
+            GameGrid = newGrid;
         }
 
          /// <summary>
