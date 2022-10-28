@@ -49,17 +49,10 @@ namespace Server.Controllers
             return Ok(_gameSession.GetGameDto());
         }
 
-        [HttpGet("GameGrid/UpdateGame")]
-        public async Task<IActionResult> UpdateGameGrid(GameGrid newGrid)
+        [HttpGet("NewGameState")]
+        public ActionResult<string> NewGameState()
         {
-            Task.Run(() => _gameSession.UpdateGameGrid(newGrid));//Run task async, because the task below is dependant on this connection closing soon
-            return Ok();
-        }
-
-        [HttpGet("GameGrid")]
-        public ActionResult<GameGrid> GetGameGrid()
-        {
-            return Ok(_gameSession.GetGameGridData());
+            return Ok(_gameSession.NewGameState("lmao"));
         }
     }
 }

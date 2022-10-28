@@ -1,6 +1,7 @@
 ﻿using Server.GameLogic.Factories.Abstract;
 using Server.Helpers;
 using Server.Models;
+using System.Threading;
 
 namespace Server.GameLogic
 {
@@ -11,6 +12,8 @@ namespace Server.GameLogic
          private Game GameInfo;
 
          private bool GameHasStarted = false;
+
+         AutoResetEvent autoEvent = new AutoResetEvent(false);
 
          //Isivaizduoju sitaip updatinti galima butu zaidimo busena, bet HTTP yra dalykas kurio visiskai nesuprantu. - Maksas
          private GameGrid GameGrid;
@@ -59,7 +62,29 @@ namespace Server.GameLogic
              GameInfo.StartTime = DateTime.Now;
              GameInfo.GameLevel = levelFactory.CreateGameLevel();//Use abstract factory to create game level preset for both players
              GameStartedNotifyPlayers();//Send to each player updated Game info
-         }
+
+            //Tipo timeris kuris cia kazka veikti gali?
+            var stateTimer = new Timer(TimedEvent, autoEvent, 1000, 1000); //Po 1000 milisekundziu padarys TimedEvent, ir tada tai kartos kas 1000 milisekundziu
+        }
+
+        private void TimedEvent(Object stateInfo)
+        {
+            AutoResetEvent autoEvent = (AutoResetEvent)stateInfo;
+
+            string getEndpoint = "/GetGameState/";
+            string updateEndpoint = "/UpdateGameState/";
+
+            HttpRequests.PostRequest(GameInfo.Player1.IpAddress + getEndpoint, "lol");
+            HttpRequests.PostRequest(GameInfo.Player2.IpAddress + getEndpoint, "lol");
+
+            HttpRequests.PostRequest(GameInfo.Player1.IpAddress + updateEndpoint, "lol");
+            HttpRequests.PostRequest(GameInfo.Player2.IpAddress + updateEndpoint, "lol");
+        }
+
+        public string NewGameState(string text)
+        {
+            return text;
+        }
 
         private void GameStartedNotifyPlayers()
         {
