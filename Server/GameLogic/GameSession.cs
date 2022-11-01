@@ -15,8 +15,13 @@ namespace Server.GameLogic
 
          AutoResetEvent autoEvent = new AutoResetEvent(false);
 
-         //Isivaizduoju sitaip updatinti galima butu zaidimo busena, bet HTTP yra dalykas kurio visiskai nesuprantu. - Maksas
-         private GameGrid GameGrid;
+         GameState PlayerOneState = new GameState();
+         GameState PlayerTwoState = new GameState();
+
+        private Timer StateTimer;
+
+        //Isivaizduoju sitaip updatinti galima butu zaidimo busena, bet HTTP yra dalykas kurio visiskai nesuprantu. - Maksas
+        private GameGrid GameGrid;
 
          private GameSession()
          {
@@ -63,22 +68,43 @@ namespace Server.GameLogic
              GameInfo.GameLevel = levelFactory.CreateGameLevel();//Use abstract factory to create game level preset for both players
              GameStartedNotifyPlayers();//Send to each player updated Game info
 
+            Console.WriteLine("Pradedam zaidima");
+
+            //Gaunam pradinius GameState
+            string getEndpoint = "/GetGameState/";
+            HttpResponseMessage httpResponseMessagePlayerOne = HttpRequests.GetRequest(GameInfo.Player1.IpAddress + getEndpoint);
+            PlayerOneState = httpResponseMessagePlayerOne.Deserialize<GameState>();
+            HttpResponseMessage httpResponseMessagePlayerTwo = HttpRequests.GetRequest(GameInfo.Player2.IpAddress + getEndpoint);
+            PlayerTwoState = httpResponseMessagePlayerTwo.Deserialize<GameState>();
+
+            Console.WriteLine("Pradedam timed event");
+
             //Tipo timeris kuris cia kazka veikti gali?
-            var stateTimer = new Timer(TimedEvent, autoEvent, 1000, 1000); //Po 1000 milisekundziu padarys TimedEvent, ir tada tai kartos kas 1000 milisekundziu
+            StateTimer = new Timer(TimedEvent, null, 5000, Timeout.Infinite); //Po 1000 milisekundziu padarys TimedEvent, ir tada tai kartos kas 1000 milisekundziu
         }
 
         private void TimedEvent(Object stateInfo)
         {
-            AutoResetEvent autoEvent = (AutoResetEvent)stateInfo;
 
+            Console.WriteLine("TimedEventVyksta");
+
+            //Gaunam GameState
             string getEndpoint = "/GetGameState/";
+            HttpResponseMessage httpResponseMessagePlayerOne = HttpRequests.GetRequest(GameInfo.Player1.IpAddress + getEndpoint);
+            PlayerOneState = httpResponseMessagePlayerOne.Deserialize<GameState>();
+            HttpResponseMessage httpResponseMessagePlayerTwo = HttpRequests.GetRequest(GameInfo.Player2.IpAddress + getEndpoint);
+            PlayerTwoState = httpResponseMessagePlayerTwo.Deserialize<GameState>();
+
+            //Vincentui: Va cia gali ikisti nuoroda i metoda, kuris su fizikom susitvarkys.
+
+            
+
+            //Placeholderio tikslu, abiems zaidejams tiesiog nusiuncia pirmo zaidejo busena.
             string updateEndpoint = "/UpdateGameState/";
+            HttpRequests.PostRequest(GameInfo.Player1.IpAddress + updateEndpoint, PlayerOneState);
+            HttpRequests.PostRequest(GameInfo.Player2.IpAddress + updateEndpoint, PlayerOneState);
 
-            HttpRequests.PostRequest(GameInfo.Player1.IpAddress + getEndpoint, "lol");
-            HttpRequests.PostRequest(GameInfo.Player2.IpAddress + getEndpoint, "lol");
-
-            HttpRequests.PostRequest(GameInfo.Player1.IpAddress + updateEndpoint, "lol");
-            HttpRequests.PostRequest(GameInfo.Player2.IpAddress + updateEndpoint, "lol");
+            StateTimer.Change(5000, Timeout.Infinite);
         }
 
         public string NewGameState(string text)
@@ -96,18 +122,6 @@ namespace Server.GameLogic
         public Game GetGameDto()
         {
             return GameInfo;
-        }
-
-        //Isivaizduoju sitaip updatinti galima butu zaidimo busena, bet HTTP yra dalykas kurio visiskai nesuprantu. - Maksas
-        public GameGrid GetGameGridData()
-        {
-            return GameGrid;
-        }
-
-        //Isivaizduoju sitaip updatinti galima butu zaidimo busena, bet HTTP yra dalykas kurio visiskai nesuprantu. - Maksas
-        public void UpdateGameGrid(GameGrid newGrid)
-        {
-            GameGrid = newGrid;
         }
 
          /// <summary>
