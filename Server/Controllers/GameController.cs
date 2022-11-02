@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Server.GameLogic;
 using Server.GameLogic.Factories.Concrete;
 using Server.Models;
+using System.Timers;
 
 namespace Server.Controllers
 {
@@ -46,6 +47,12 @@ namespace Server.Controllers
         public ActionResult<Game> GetGameInfo()
         {
             return Ok(_gameSession.GetGameDto());
+        }
+
+        [HttpGet("NewGameState")]
+        public ActionResult<string> NewGameState()
+        {
+            return Ok(_gameSession.NewGameState("lmao"));
         }
     }
 }
