@@ -5,50 +5,53 @@ using System.Threading;
 
 namespace Server.GameLogic
 {
-    public class GameSession
+    public class GameSession : IObserverSubject
     {
-         private static readonly GameSession _instance = new GameSession();
+        private static readonly GameSession _instance = new GameSession();
 
-         private Game GameInfo;
+        private Game GameInfo;
 
-         private bool GameHasStarted = false;
+        private bool GameHasStarted = false;
 
-         AutoResetEvent autoEvent = new AutoResetEvent(false);
+        AutoResetEvent autoEvent = new AutoResetEvent(false);
 
-         GameState PlayerOneState = new GameState();
-         GameState PlayerTwoState = new GameState();
+        GameState PlayerOneState = new GameState();
+        GameState PlayerTwoState = new GameState();
 
         private Timer StateTimer;
 
         //Isivaizduoju sitaip updatinti galima butu zaidimo busena, bet HTTP yra dalykas kurio visiskai nesuprantu. - Maksas
         private GameGrid GameGrid;
 
-         private GameSession()
-         {
-             GameInfo = new Game();
-             GameGrid = new GameGrid();
-         }
+        public List<Player> Observers { get; set; }
 
-         public static GameSession GetInstance()
-         {
-             return _instance;
-         } 
+        private GameSession()
+        {
+            GameInfo = new Game();
+            GameGrid = new GameGrid();
+            Observers = new List<Player>() { null, null};
+        }
 
-         public void SetPlayerAsReady(string name)
-         {
+        public static GameSession GetInstance()
+        {
+            return _instance;
+        }
+
+        public void SetPlayerAsReady(string name)
+        {
             Player player = GameInfo.GetPlayer(name);
-            if(player == null)
+            if (player == null)
                 throw new Exception($"Player {name} doesn't participate in the game");
 
             player.IsReadyToPlay = true;
 
             if (GameInfo.Player1 != null && GameInfo.Player1.IsReadyToPlay
-                &&  GameInfo.Player2 != null && GameInfo.Player2.IsReadyToPlay 
+                && GameInfo.Player2 != null && GameInfo.Player2.IsReadyToPlay
                 && !GameHasStarted)
             {
                 StartGame(FactoryPresets.CreateLevel1Factory());
             }
-         }
+        }
 
         /// <summary>
         /// Using this to quick-start the game when debugging
@@ -58,15 +61,15 @@ namespace Server.GameLogic
             GameHasStarted = true;
             GameInfo.StartTime = DateTime.Now;
             GameInfo.GameLevel = FactoryPresets.CreateLevel1Factory().CreateGameLevel();
-            HttpRequests.PostRequest(GameInfo.Player1.IpAddress+"/StartGame/", GameInfo);
+            HttpRequests.PostRequest(GameInfo.Player1.IpAddress + "/StartGame/", GameInfo);
         }
 
         private void StartGame(GameLevelAbstractFactory levelFactory)
-         {
-             GameHasStarted = true;
-             GameInfo.StartTime = DateTime.Now;
-             GameInfo.GameLevel = levelFactory.CreateGameLevel();//Use abstract factory to create game level preset for both players
-             GameStartedNotifyPlayers();//Send to each player updated Game info
+        {
+            GameHasStarted = true;
+            GameInfo.StartTime = DateTime.Now;
+            GameInfo.GameLevel = levelFactory.CreateGameLevel();//Use abstract factory to create game level preset for both players
+            NotifyAllObservers();//Send to each player updated Game info
 
             Console.WriteLine("Pradedam zaidima");
 
@@ -97,7 +100,7 @@ namespace Server.GameLogic
 
             //Vincentui: Va cia gali ikisti nuoroda i metoda, kuris su fizikom susitvarkys.
 
-            
+
 
             //Placeholderio tikslu, abiems zaidejams tiesiog nusiuncia pirmo zaidejo busena.
             string updateEndpoint = "/UpdateGameState/";
@@ -112,38 +115,66 @@ namespace Server.GameLogic
             return text;
         }
 
-        private void GameStartedNotifyPlayers()
-        {
-            string endpoint = "/StartGame/";
-            HttpRequests.PostRequest(GameInfo.Player1.IpAddress+endpoint, GameInfo);
-            HttpRequests.PostRequest(GameInfo.Player2.IpAddress+endpoint, GameInfo);
-        }
+
 
         public Game GetGameDto()
         {
             return GameInfo;
         }
 
-         /// <summary>
-         /// Try to add a player to a session
-         /// </summary>
-         /// <param name="player"></param>\
-         /// <returns>Returns null if player was added and error message if player wasn't added</returns>
-         public string TryCreateAndAddPlayer(Player player)
-         {
-             if (GameInfo.Player1 == null)
-                 GameInfo.Player1 = player;
-             else if (GameInfo.Player2 == null)
-             {
-                 if (GameInfo.Player1.Name != player.Name)
-                     GameInfo.Player2 = player;
-                 else
-                     return $"Player with name {player.Name} already exists";
-             }
-             else
-                 return "Two players are already added";
+        /// <summary>
+        /// Try to add a player to a session
+        /// </summary>
+        /// <param name="player"></param>\
+        /// <returns>Returns null if player was added and error message if player wasn't added</returns>
+        public string RegisterObserver(Player player)
+        {
+            if (GameInfo.Player1 == null)
+            {
+                GameInfo.Player1 = player;
+                Observers[0] = player;
+            }
+            else if (GameInfo.Player2 == null)
+            {
+                if (GameInfo.Player1.Name != player.Name)
+                {
+                    GameInfo.Player2 = player;
+                    Observers[1] = player;
+                }
+                else
+                    return $"Player with name {player.Name} already exists";
+            }
+            else
+                return "Two players are already added";
 
-             return null;
-         }
+            return null;
+        }
+
+        public void UnregisterObserver(string name)
+        {
+            if (GameInfo.Player1 != null && GameInfo.Player1.Name == name)
+            {
+                GameInfo.Player1 = null;
+                Observers[0] = null;
+            }
+
+            else if (GameInfo.Player2 != null && GameInfo.Player2.Name == name)
+            {
+                GameInfo.Player2 = null;
+                Observers[1] = null;
+            }
+        }
+
+        /// <summary>
+        /// Notify all observers that game has started
+        /// </summary>
+        public void NotifyAllObservers()
+        {
+            string endpoint = "/StartGame/";
+            foreach (Player player in Observers)
+            {
+                HttpRequests.PostRequest(player.IpAddress + endpoint, GameInfo);
+            }
+        }
     }
 }

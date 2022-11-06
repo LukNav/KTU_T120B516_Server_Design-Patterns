@@ -19,11 +19,18 @@ namespace Server.Controllers
 
             Player player = playerFactory.Create(name, ip);
 
-            string errorMessage = _gameSession.TryCreateAndAddPlayer(player);
+            string errorMessage = _gameSession.RegisterObserver(player);
             if (errorMessage != null)//If errorMessage is not null, return bad request with error message
                 return BadRequest(errorMessage);
 
             return Created("", $"Player '{name}' was created");
+        }
+
+        [HttpDelete("Player/Unregister/{name}")]
+        public ActionResult UnregisterClient(string name)
+        {
+            _gameSession.UnregisterObserver(name);
+            return NoContent();
         }
 
         [HttpGet("Player/SetAsReady/{name}")]
