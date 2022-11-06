@@ -29,7 +29,7 @@ namespace Server.GameLogic
         {
             GameInfo = new Game();
             GameGrid = new GameGrid();
-            Observers = new List<Player>(2);
+            Observers = new List<Player>() { null, null};
         }
 
         public static GameSession GetInstance()
