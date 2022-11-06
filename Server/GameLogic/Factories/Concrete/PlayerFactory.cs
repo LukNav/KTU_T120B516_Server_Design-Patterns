@@ -6,11 +6,17 @@ namespace Server.GameLogic.Factories.Concrete
 {
     public class PlayerFactory
     {
-        private readonly List<KnownColor> _availablePlayerColors = new List<KnownColor>
+        private readonly List<KnownColor> _basePlayerColors = new List<KnownColor>
             { KnownColor.Red, KnownColor.Green, KnownColor.Blue, KnownColor.Yellow};
 
+        private List<KnownColor> _availablePlayerColors;
+
         public PlayerFactory()
+
         {
+            KnownColor[] tempArray = new KnownColor[_basePlayerColors.Count];
+            _basePlayerColors.CopyTo(tempArray);
+            _availablePlayerColors = new List<KnownColor>(tempArray);
         }
 
         public Player Create(string name, string ip)
