@@ -150,15 +150,15 @@ namespace Server.GameLogic
             return null;
         }
 
-        public void UnregisterObserver(Player player)
+        public void UnregisterObserver(string name)
         {
-            if (GameInfo.Player1 == null && GameInfo.Player1.Name == player.Name)
+            if (GameInfo.Player1 != null && GameInfo.Player1.Name == name)
             {
                 GameInfo.Player1 = null;
                 Observers[0] = null;
             }
 
-            else if (GameInfo.Player2 == null && GameInfo.Player2.Name == player.Name)
+            else if (GameInfo.Player2 != null && GameInfo.Player2.Name == name)
             {
                 GameInfo.Player2 = null;
                 Observers[1] = null;

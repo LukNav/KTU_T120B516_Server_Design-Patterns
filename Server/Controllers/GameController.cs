@@ -26,10 +26,10 @@ namespace Server.Controllers
             return Created("", $"Player '{name}' was created");
         }
 
-        [HttpDelete("Player/Unregister")]
-        public ActionResult UnregisterClient([FromBody] Player player)
+        [HttpDelete("Player/Unregister/{name}")]
+        public ActionResult UnregisterClient(string name)
         {
-            _gameSession.UnregisterObserver(player);
+            _gameSession.UnregisterObserver(name);
             return NoContent();
         }
 
