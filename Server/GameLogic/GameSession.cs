@@ -7,7 +7,7 @@ namespace Server.GameLogic
 {
     public class GameSession : IObserverSubject
     {
-        private const int Level = 1;
+        private const int Level = 2;
         private static readonly GameSession _instance = new GameSession();
 
         private Game GameInfo;
@@ -74,11 +74,12 @@ namespace Server.GameLogic
 
             Console.WriteLine("Pradedam zaidima");
 
-            //Gaunam pradinius GameState
+            //Without adapter
             PlayerStateRequests player1StateRequests = new PlayerStateRequests(GameInfo.Player1);
             HttpResponseMessage httpResponseMessage = player1StateRequests.GetState();
             PlayerOneState = httpResponseMessage.Deserialize<GameState>();
 
+            //With adapter
             PlayerStateRequestsAdapter player2StateRequests = new PlayerStateRequestsAdapter(GameInfo.Player2);
             PlayerTwoState = player2StateRequests.GetState();
 
@@ -107,7 +108,7 @@ namespace Server.GameLogic
             //Placeholderio tikslu, abiems zaidejams tiesiog nusiuncia pirmo zaidejo busena.
             string updateEndpoint = "/UpdateGameState/";
             HttpRequests.PostRequest(GameInfo.Player1.IpAddress + updateEndpoint, PlayerOneState);
-            HttpRequests.PostRequest(GameInfo.Player2.IpAddress + updateEndpoint, PlayerOneState);
+            HttpRequests.PostRequest(GameInfo.Player2.IpAddress + updateEndpoint, PlayerTwoState);
 
             StateTimer.Change(5000, Timeout.Infinite);
         }
