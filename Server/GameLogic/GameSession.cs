@@ -74,11 +74,12 @@ namespace Server.GameLogic
             Console.WriteLine("Pradedam zaidima");
 
             //Gaunam pradinius GameState
-            string getEndpoint = "/GetGameState/";
-            HttpResponseMessage httpResponseMessagePlayerOne = HttpRequests.GetRequest(GameInfo.Player1.IpAddress + getEndpoint);
-            PlayerOneState = httpResponseMessagePlayerOne.Deserialize<GameState>();
-            HttpResponseMessage httpResponseMessagePlayerTwo = HttpRequests.GetRequest(GameInfo.Player2.IpAddress + getEndpoint);
-            PlayerTwoState = httpResponseMessagePlayerTwo.Deserialize<GameState>();
+            PlayerStateRequests player1StateRequests = new PlayerStateRequests(GameInfo.Player1);
+            HttpResponseMessage httpResponseMessage = player1StateRequests.GetState();
+            PlayerOneState = httpResponseMessage.Deserialize<GameState>();
+
+            PlayerStateRequestsAdapter player2StateRequests = new PlayerStateRequestsAdapter(GameInfo.Player2);
+            PlayerTwoState = player2StateRequests.GetState();
 
             Console.WriteLine("Pradedam timed event");
 
@@ -114,8 +115,6 @@ namespace Server.GameLogic
         {
             return text;
         }
-
-
 
         public Game GetGameDto()
         {
