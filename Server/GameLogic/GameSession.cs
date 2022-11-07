@@ -75,8 +75,10 @@ namespace Server.GameLogic
 
             //Gaunam pradinius GameState
             PlayerStateRequests player1StateRequests = new PlayerStateRequests(GameInfo.Player1);
-            PlayerStateRequests player2StateRequests = new PlayerStateRequests(GameInfo.Player2);
-            PlayerOneState = player1StateRequests.GetState();
+            HttpResponseMessage httpResponseMessage = player1StateRequests.GetState();
+            PlayerOneState = httpResponseMessage.Deserialize<GameState>();
+
+            PlayerStateRequestsAdapter player2StateRequests = new PlayerStateRequestsAdapter(GameInfo.Player2);
             PlayerTwoState = player2StateRequests.GetState();
 
             Console.WriteLine("Pradedam timed event");
@@ -113,8 +115,6 @@ namespace Server.GameLogic
         {
             return text;
         }
-
-
 
         public Game GetGameDto()
         {

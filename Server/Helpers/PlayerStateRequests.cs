@@ -11,18 +11,40 @@ namespace Server.Helpers
 {
     public class PlayerStateRequests
     {
+        private string endpoint;
+
         Player _player { get; set; }
 
         public PlayerStateRequests(Player player)
         {
             _player = player;
+            endpoint = "/GetGameState/";
+        }
+
+        public HttpResponseMessage GetState()
+        {
+            string getEndpoint = endpoint;
+            return HttpRequests.GetRequest(_player.IpAddress + getEndpoint);
+        }
+    }
+
+    interface IPlayerStateRequestsAdapter
+    {
+        GameState GetState();
+    }
+
+    public class PlayerStateRequestsAdapter : IPlayerStateRequestsAdapter
+    {
+        PlayerStateRequests _playerStateRequests;
+
+        public PlayerStateRequestsAdapter(Player player)
+        {
+            _playerStateRequests = new PlayerStateRequests(player);
         }
 
         public GameState GetState()
         {
-            string getEndpoint = "/GetGameState/";
-            HttpResponseMessage httpResponseMessagePlayerOne = HttpRequests.GetRequest(_player.IpAddress + getEndpoint);
-            return httpResponseMessagePlayerOne.Deserialize<GameState>();
+            return _playerStateRequests.GetState().Deserialize<GameState>(;
         }
     }
 }
