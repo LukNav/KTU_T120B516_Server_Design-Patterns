@@ -22,9 +22,9 @@ namespace Server.Helpers
                 default:
                     return new GameLevel(
                         towerType : new Tower(new Position(0, 0), "Tower_1.png", 100),
-                        pawn1 : new Pawn(new Position(0, 0), "Villager_1.png", 40, 5, 1, 20),
-                        pawn2 : new Pawn(new Position(0, 0), "Villager_2.png", 30, 15, 2, 35),
-                        pawn3 : new Pawn(new Position(0, 0), "Villager_3.png", 50, 25, 3, 45));
+                        pawn1 : new Pawn(new Position(0, 0), "Villager_1.png", 40, 5, 1, 20, PawnClass.Tier1),
+                        pawn2 : new Pawn(new Position(0, 0), "Villager_2.png", 30, 15, 2, 35, PawnClass.Tier2),
+                        pawn3 : new Pawn(new Position(0, 0), "Villager_3.png", 50, 25, 3, 45, PawnClass.Tier3));
             }
                 
         }
@@ -34,9 +34,9 @@ namespace Server.Helpers
             return new GameLevelAbstractFactory
             (
                 towerFactory: new TowerFactory(200, "Tower_2.png"),
-                pawnFactory1: new PawnFactory(40, 5, 1, 20, "Soldier_1_2.png"),
-                pawnFactory2: new PawnFactory(30, 15, 2, 35, "Raider_1_2.png"),
-                pawnFactory3: new PawnFactory(50, 25, 3, 45, "Knight_1_2.png")
+                pawnFactory1: new PawnFactory(40, 5, 1, 20, "Soldier_1_2.png", PawnClass.Tier1),
+                pawnFactory2: new PawnFactory(30, 15, 2, 35, "Raider_1_2.png", PawnClass.Tier2),
+                pawnFactory3: new PawnFactory(50, 25, 3, 45, "Knight_1_2.png", PawnClass.Tier3)
             ).CreateGameLevel();
         }
 
@@ -45,9 +45,9 @@ namespace Server.Helpers
             return new GameLevelAbstractFactory
             (
                 towerFactory: new TowerFactory(100, "Tower_2.png"),
-                pawnFactory1: new PawnFactory(60, 5, 1, 20, "Soldier_1_2.png"),
-                pawnFactory2: new PawnFactory(50, 15, 2, 45, "Raider_1_2.png"),
-                pawnFactory3: new PawnFactory(50, 25,3, 60, "Knight_1_2.png")
+                pawnFactory1: new PawnFactory(60, 5, 1, 20, "Soldier_1_2.png", PawnClass.Tier1),
+                pawnFactory2: new PawnFactory(50, 15, 2, 45, "Raider_1_2.png", PawnClass.Tier2),
+                pawnFactory3: new PawnFactory(50, 25,3, 60, "Knight_1_2.png", PawnClass.Tier3)
             ).CreateGameLevel();
         }
 
