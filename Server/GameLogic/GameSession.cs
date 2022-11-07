@@ -7,6 +7,7 @@ namespace Server.GameLogic
 {
     public class GameSession : IObserverSubject
     {
+        private const int Level = 2;
         private static readonly GameSession _instance = new GameSession();
 
         private Game GameInfo;
@@ -49,7 +50,7 @@ namespace Server.GameLogic
                 && GameInfo.Player2 != null && GameInfo.Player2.IsReadyToPlay
                 && !GameHasStarted)
             {
-                StartGame(FactoryPresets.CreateLevel1Factory());
+                StartGame(FactoryPresets.GetLevel(Level));
             }
         }
 
@@ -60,24 +61,25 @@ namespace Server.GameLogic
         {
             GameHasStarted = true;
             GameInfo.StartTime = DateTime.Now;
-            GameInfo.GameLevel = FactoryPresets.CreateLevel1Factory().CreateGameLevel();
+            GameInfo.GameLevel = FactoryPresets.GetLevel(1);
             HttpRequests.PostRequest(GameInfo.Player1.IpAddress + "/StartGame/", GameInfo);
         }
 
-        private void StartGame(GameLevelAbstractFactory levelFactory)
+        private void StartGame(GameLevel gameLevel)
         {
             GameHasStarted = true;
             GameInfo.StartTime = DateTime.Now;
-            GameInfo.GameLevel = levelFactory.CreateGameLevel();//Use abstract factory to create game level preset for both players
+            GameInfo.GameLevel = gameLevel;//Use abstract factory to create game level preset for both players
             NotifyAllObservers();//Send to each player updated Game info
 
             Console.WriteLine("Pradedam zaidima");
 
-            //Gaunam pradinius GameState
+            //Without adapter
             PlayerStateRequests player1StateRequests = new PlayerStateRequests(GameInfo.Player1);
             HttpResponseMessage httpResponseMessage = player1StateRequests.GetState();
             PlayerOneState = httpResponseMessage.Deserialize<GameState>();
 
+            //With adapter
             PlayerStateRequestsAdapter player2StateRequests = new PlayerStateRequestsAdapter(GameInfo.Player2);
             PlayerTwoState = player2StateRequests.GetState();
 
@@ -106,7 +108,7 @@ namespace Server.GameLogic
             //Placeholderio tikslu, abiems zaidejams tiesiog nusiuncia pirmo zaidejo busena.
             string updateEndpoint = "/UpdateGameState/";
             HttpRequests.PostRequest(GameInfo.Player1.IpAddress + updateEndpoint, PlayerOneState);
-            HttpRequests.PostRequest(GameInfo.Player2.IpAddress + updateEndpoint, PlayerOneState);
+            HttpRequests.PostRequest(GameInfo.Player2.IpAddress + updateEndpoint, PlayerTwoState);
 
             StateTimer.Change(5000, Timeout.Infinite);
         }

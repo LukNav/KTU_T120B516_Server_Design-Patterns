@@ -11,13 +11,12 @@ namespace Server.Controllers
     public class GameController : ControllerBase
     {
         private GameSession _gameSession = GameSession.GetInstance();
+        private PlayerFactory _playerFactory = new PlayerFactory();
 
         [HttpGet("Player/Create/{name}/{ip}")]
         public ActionResult<string> CreateClient(string name, string ip)
         {
-            PlayerFactory playerFactory = new PlayerFactory();
-
-            Player player = playerFactory.Create(name, ip);
+            Player player = _playerFactory.Create(name, ip);
 
             string errorMessage = _gameSession.RegisterObserver(player);
             if (errorMessage != null)//If errorMessage is not null, return bad request with error message
