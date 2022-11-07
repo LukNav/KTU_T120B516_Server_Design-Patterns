@@ -6,6 +6,6 @@ namespace Server.GameLogic
     {
         ActionResult<string> AddClient(string name, string ip);
         ActionResult RemoveClient(string name);
-        Task<IActionResult> SetClientReady(string name);
+        IActionResult SetClientReady(string name);
     }
 }
