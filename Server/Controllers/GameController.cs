@@ -11,32 +11,24 @@ namespace Server.Controllers
     public class GameController : ControllerBase
     {
         private GameSession _gameSession = GameSession.GetInstance();
-        private PlayerFactory _playerFactory = new PlayerFactory();
+        private ClientSessionFacade _clientSessionFacade = new ClientSessionFacade();
 
         [HttpGet("Player/Create/{name}/{ip}")]
         public ActionResult<string> CreateClient(string name, string ip)
         {
-            Player player = _playerFactory.Create(name, ip);
-
-            string errorMessage = _gameSession.RegisterObserver(player);
-            if (errorMessage != null)//If errorMessage is not null, return bad request with error message
-                return BadRequest(errorMessage);
-
-            return Created("", $"Player '{name}' was created");
+            return _clientSessionFacade.AddClient(name, ip);
         }
 
         [HttpDelete("Player/Unregister/{name}")]
         public ActionResult UnregisterClient(string name)
         {
-            _gameSession.UnregisterObserver(name);
-            return NoContent();
+            return _clientSessionFacade.RemoveClient(name);
         }
 
         [HttpGet("Player/SetAsReady/{name}")]
         public async Task<IActionResult> SetPlayerAsReady(string name)
         {
-            Task.Run(() => _gameSession.SetPlayerAsReady(name));//Run task async, because the task below is dependant on this connection closing soon
-            return Ok();
+            return _clientSessionFacade.SetClientReady(name);
         }
 
         [HttpGet("/Debug/StartGameSolo/{port}")]
