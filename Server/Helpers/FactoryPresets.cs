@@ -25,7 +25,6 @@ namespace Server.Helpers
                         pawn1 : new Pawn(new Position(0, 0), "Villager_1.png", 40, 5, 1, 20),
                         pawn2 : new Pawn(new Position(0, 0), "Villager_2.png", 30, 15, 2, 35),
                         pawn3 : new Pawn(new Position(0, 0), "Villager_3.png", 50, 25, 3, 45));
-                   
             }
                 
         }
