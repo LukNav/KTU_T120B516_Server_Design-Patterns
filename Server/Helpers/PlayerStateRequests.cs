@@ -26,5 +26,10 @@ namespace Server.Helpers
             string getEndpoint = endpoint;
             return HttpRequests.GetRequest(_player.IpAddress + getEndpoint);
         }
+
+        public void UpdateState()
+        {
+            HttpRequests.PostRequest(_player.IpAddress + "/updateGameState", _player);
+        }
     }
 }
