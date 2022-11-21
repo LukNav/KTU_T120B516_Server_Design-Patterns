@@ -9,6 +9,5 @@
         public int TileHeight { get; set; }
         public int TileRows { get; set; }
         public int TileCols { get; set; }
-        public List<int> GridContents { get; set; }
     }
 }

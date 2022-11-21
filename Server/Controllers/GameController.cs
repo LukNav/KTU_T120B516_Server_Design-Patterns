@@ -47,10 +47,11 @@ namespace Server.Controllers
             return Ok(_gameSession.GetGameDto());
         }
 
-        [HttpGet("NewGameState")]
-        public ActionResult<string> NewGameState()
+        [HttpPost("EndTurn/{name}")]
+        public async Task<IActionResult> EndPlayersTurn(string name, [FromBody] GameState gameState)
         {
-            return Ok(_gameSession.NewGameState("lmao"));
+            Task.Run(() => _gameSession.EndPlayersTurn(gameState, name));
+            return Ok();
         }
     }
 }

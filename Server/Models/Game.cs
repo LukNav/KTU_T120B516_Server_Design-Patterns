@@ -22,5 +22,14 @@
                 return Player2;
             return null;
         }
+
+        public Player GetOtherPlayer(string name)
+        {
+            if (Player1.Name == name)
+                return Player2;
+            else if (Player2.Name == name)
+                return Player1;
+            return null;
+        }
     }
 }
