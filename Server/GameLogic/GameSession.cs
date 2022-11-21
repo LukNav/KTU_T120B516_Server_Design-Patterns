@@ -92,25 +92,25 @@ namespace Server.GameLogic
         private void TimedEvent(Object stateInfo)
         {
 
-            Console.WriteLine("TimedEventVyksta");
+            //Console.WriteLine("TimedEventVyksta");
 
-            //Gaunam GameState
-            string getEndpoint = "/GetGameState/";
-            HttpResponseMessage httpResponseMessagePlayerOne = HttpRequests.GetRequest(GameInfo.Player1.IpAddress + getEndpoint);
-            PlayerOneState = httpResponseMessagePlayerOne.Deserialize<GameState>();
-            HttpResponseMessage httpResponseMessagePlayerTwo = HttpRequests.GetRequest(GameInfo.Player2.IpAddress + getEndpoint);
-            PlayerTwoState = httpResponseMessagePlayerTwo.Deserialize<GameState>();
+            ////Gaunam GameState
+            //string getEndpoint = "/GetGameState/";
+            //HttpResponseMessage httpResponseMessagePlayerOne = HttpRequests.GetRequest(GameInfo.Player1.IpAddress + getEndpoint);
+            //PlayerOneState = httpResponseMessagePlayerOne.Deserialize<GameState>();
+            //HttpResponseMessage httpResponseMessagePlayerTwo = HttpRequests.GetRequest(GameInfo.Player2.IpAddress + getEndpoint);
+            //PlayerTwoState = httpResponseMessagePlayerTwo.Deserialize<GameState>();
 
-            //Vincentui: Va cia gali ikisti nuoroda i metoda, kuris su fizikom susitvarkys.
+            ////Vincentui: Va cia gali ikisti nuoroda i metoda, kuris su fizikom susitvarkys.
 
 
 
-            //Placeholderio tikslu, abiems zaidejams tiesiog nusiuncia pirmo zaidejo busena.
-            string updateEndpoint = "/UpdateGameState/";
-            HttpRequests.PostRequest(GameInfo.Player1.IpAddress + updateEndpoint, PlayerOneState);
-            HttpRequests.PostRequest(GameInfo.Player2.IpAddress + updateEndpoint, PlayerTwoState);
+            ////Placeholderio tikslu, abiems zaidejams tiesiog nusiuncia pirmo zaidejo busena.
+            //string updateEndpoint = "/UpdateGameState/";
+            //HttpRequests.PostRequest(GameInfo.Player1.IpAddress + updateEndpoint, PlayerOneState);
+            //HttpRequests.PostRequest(GameInfo.Player2.IpAddress + updateEndpoint, PlayerTwoState);
 
-            StateTimer.Change(5000, Timeout.Infinite);
+            //StateTimer.Change(5000, Timeout.Infinite);
         }
 
         public string NewGameState(string text)
