@@ -48,7 +48,7 @@ namespace Server.Controllers
         }
 
         [HttpPost("EndTurn/{name}")]
-        public async Task<IActionResult> EndPlayersTurn([FromBody] GameState gameState, string name)
+        public async Task<IActionResult> EndPlayersTurn(string name, [FromBody] GameState gameState)
         {
             Task.Run(() => _gameSession.EndPlayersTurn(gameState, name));
             return Ok();

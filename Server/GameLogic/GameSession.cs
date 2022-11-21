@@ -72,8 +72,6 @@ namespace Server.GameLogic
             GameInfo.GameLevel = gameLevel;//Use abstract factory to create game level preset for both players
             NotifyAllObservers();//Send to each player updated Game info
 
-            Console.WriteLine("Pradedam zaidima");
-
             //Without adapter
             PlayerStateRequests player1StateRequests = new PlayerStateRequests(GameInfo.Player1);
             HttpResponseMessage httpResponseMessage = player1StateRequests.GetState();
@@ -83,39 +81,7 @@ namespace Server.GameLogic
             PlayerStateRequestsAdapter player2StateRequests = new PlayerStateRequestsAdapter(GameInfo.Player2);
             PlayerTwoState = player2StateRequests.GetState();
 
-            Console.WriteLine("Pradedam timed event");
-
-            //Tipo timeris kuris cia kazka veikti gali?
-            StateTimer = new Timer(TimedEvent, null, 5000, Timeout.Infinite); //Po 1000 milisekundziu padarys TimedEvent, ir tada tai kartos kas 1000 milisekundziu
-        }
-
-        private void TimedEvent(Object stateInfo)
-        {
-
-            //Console.WriteLine("TimedEventVyksta");
-
-            ////Gaunam GameState
-            //string getEndpoint = "/GetGameState/";
-            //HttpResponseMessage httpResponseMessagePlayerOne = HttpRequests.GetRequest(GameInfo.Player1.IpAddress + getEndpoint);
-            //PlayerOneState = httpResponseMessagePlayerOne.Deserialize<GameState>();
-            //HttpResponseMessage httpResponseMessagePlayerTwo = HttpRequests.GetRequest(GameInfo.Player2.IpAddress + getEndpoint);
-            //PlayerTwoState = httpResponseMessagePlayerTwo.Deserialize<GameState>();
-
-            ////Vincentui: Va cia gali ikisti nuoroda i metoda, kuris su fizikom susitvarkys.
-
-
-
-            ////Placeholderio tikslu, abiems zaidejams tiesiog nusiuncia pirmo zaidejo busena.
-            //string updateEndpoint = "/UpdateGameState/";
-            //HttpRequests.PostRequest(GameInfo.Player1.IpAddress + updateEndpoint, PlayerOneState);
-            //HttpRequests.PostRequest(GameInfo.Player2.IpAddress + updateEndpoint, PlayerTwoState);
-
-            //StateTimer.Change(5000, Timeout.Infinite);
-        }
-
-        public string NewGameState(string text)
-        {
-            return text;
+            HttpRequests.PostRequest(GameInfo.Player1.IpAddress + "/BeginPlayersTurn", PlayerTwoState);
         }
 
         public Game GetGameDto()
