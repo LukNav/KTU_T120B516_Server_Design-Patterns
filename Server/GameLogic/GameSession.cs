@@ -177,5 +177,15 @@ namespace Server.GameLogic
                 HttpRequests.PostRequest(player.IpAddress + endpoint, GameInfo);
             }
         }
+
+        internal void EndPlayersTurn(GameState gameState, string name)
+        {
+            if (GameInfo.Player1.Name == name)
+                PlayerOneState = gameState;
+            else if(GameInfo.Player2.Name == name)
+                PlayerTwoState = gameState;
+
+            HttpRequests.PostRequest(GameInfo.GetOtherPlayer(name).IpAddress + "/BeginPlayersTurn", gameState);
+        }
     }
 }
