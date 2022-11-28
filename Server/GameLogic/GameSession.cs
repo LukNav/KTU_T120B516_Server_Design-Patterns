@@ -1,4 +1,5 @@
 ﻿using Server.GameLogic.Factories.Abstract;
+using Server.GameLogic.Iterator;
 using Server.Helpers;
 using Server.Models;
 using System.Threading;
@@ -7,7 +8,7 @@ namespace Server.GameLogic
 {
     public class GameSession : IObserverSubject
     {
-        private const int Level = 2;
+        private const int Level = 1;
         private static readonly GameSession _instance = new GameSession();
 
         private Game GameInfo;
@@ -26,8 +27,12 @@ namespace Server.GameLogic
 
         public List<Player> Observers { get; set; }
 
+        LevelIterator levelIterator { get; set; }
+
         private GameSession()
         {
+            levelIterator = (LevelIterator) new LevelCollection().CreateIterator();
+            levelIterator.IsEndless(true);
             GameInfo = new Game();
             GameGrid = new GameGrid();
             Observers = new List<Player>() { null, null};
@@ -50,7 +55,7 @@ namespace Server.GameLogic
                 && GameInfo.Player2 != null && GameInfo.Player2.IsReadyToPlay
                 && !GameHasStarted)
             {
-                StartGame(FactoryPresets.GetLevel(Level));
+                StartGame(levelIterator.Next());
             }
         }
 
@@ -152,6 +157,29 @@ namespace Server.GameLogic
                 PlayerTwoState = gameState;
 
             HttpRequests.PostRequest(GameInfo.GetOtherPlayer(name).IpAddress + "/BeginPlayersTurn", gameState);
+        }
+
+        internal void NextLevel()
+        {
+            //Without adapter
+            PlayerStateRequests player1StateRequests = new PlayerStateRequests(GameInfo.Player1);
+            HttpResponseMessage httpResponseMessage = player1StateRequests.GetState();
+            PlayerOneState = httpResponseMessage.Deserialize<GameState>();
+
+            //With adapter
+            PlayerStateRequestsAdapter player2StateRequests = new PlayerStateRequestsAdapter(GameInfo.Player2);
+            PlayerTwoState = player2StateRequests.GetState();
+
+            GameInfo.StartTime = DateTime.Now;
+            GameInfo.GameLevel = levelIterator.Next();
+
+            string endpoint = "/ChangeLevel/";
+            foreach (Player player in Observers)
+            {
+                HttpRequests.PostRequest(player.IpAddress + endpoint, GameInfo);
+            }
+            HttpRequests.PostRequest(GameInfo.Player1.IpAddress + "/BeginPlayersTurn", PlayerTwoState);
+
         }
     }
 }

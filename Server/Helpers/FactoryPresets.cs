@@ -44,10 +44,10 @@ namespace Server.Helpers
         {
             return new GameLevelAbstractFactory
             (
-                towerFactory: new TowerFactory(100, "Tower_2.png"),
-                pawnFactory1: new PawnFactory(60, 5, 1, 20, "Soldier_1_2.png", PawnClass.Tier1),
-                pawnFactory2: new PawnFactory(50, 15, 2, 45, "Raider_1_2.png", PawnClass.Tier2),
-                pawnFactory3: new PawnFactory(50, 25,3, 60, "Knight_1_2.png", PawnClass.Tier3)
+                towerFactory: new TowerFactory(100, "Tower_3.png"),
+                pawnFactory1: new PawnFactory(60, 5, 1, 20, "Soldier_1_3.png", PawnClass.Tier1),
+                pawnFactory2: new PawnFactory(50, 15, 2, 45, "Raider_1_3.png", PawnClass.Tier2),
+                pawnFactory3: new PawnFactory(50, 25,3, 60, "Knight_1_3.png", PawnClass.Tier3)
             ).CreateGameLevel();
         }
 

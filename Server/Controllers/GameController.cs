@@ -53,5 +53,12 @@ namespace Server.Controllers
             Task.Run(() => _gameSession.EndPlayersTurn(gameState, name));
             return Ok();
         }
+
+        [HttpGet("NextLevel")]
+        public async Task<IActionResult> NextLevel()
+        {
+            Task.Run(() => _gameSession.NextLevel());
+            return Ok();
+        }
     }
 }
