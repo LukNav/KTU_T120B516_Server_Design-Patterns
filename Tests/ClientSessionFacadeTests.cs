@@ -28,6 +28,18 @@ namespace Tests
             CreatedResult expected = Created("", $"Player '{name}' was created");
 
             Assert.That(result.Value, Is.EqualTo(expected.Value));
+            clientSessionFacade.RemoveClient(name);
+        }
+
+        [Test]
+        public void AddClient_ValidInput_Returns201()
+        {
+            const string name = "testName";
+            CreatedResult result = (CreatedResult)clientSessionFacade.AddClient(name, "kpafdkn").Result;
+            CreatedResult expected = Created("", $"Player '{name}' was created");
+
+            Assert.That(result.StatusCode, Is.EqualTo(expected.StatusCode));
+            clientSessionFacade.RemoveClient(name);
         }
 
         [Test]
@@ -38,6 +50,19 @@ namespace Tests
             BadRequestObjectResult result3 = (BadRequestObjectResult) clientSessionFacade.AddClient("testName3", "afasvfr").Result;
 
             Assert.That(result3.Value, Is.EqualTo("Two players are already added"));
+            clientSessionFacade.RemoveClient("testName1");
+            clientSessionFacade.RemoveClient("testName2");
         }
+
+        [Test]
+        public void RemoveClient_ValidInput_Returns204()
+        {
+            const string name = "testName";
+            CreatedResult client = (CreatedResult)clientSessionFacade.AddClient(name, "kpafdkn").Result;
+            NoContentResult result = (NoContentResult) clientSessionFacade.RemoveClient(name);
+
+            Assert.That(result.StatusCode, Is.EqualTo(204));
+        }
+
     }
 }
