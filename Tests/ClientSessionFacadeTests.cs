@@ -102,18 +102,18 @@ namespace Tests
         }
 
         [Test]
-        public void RemoveClient_NotValidInput_Returns()
+        public void RemoveClient_NotValidInput_Returns204()
         {
             const string name = "testName";
             clientSessionFacade.AddClient(name, "kpafdkn");
             NoContentResult result = (NoContentResult)clientSessionFacade.RemoveClient(name + "34");
 
-            Assert.That(result.StatusCode, Is.EqualTo(204)); //nelogiška, bet logiška
+            Assert.That(result.StatusCode, Is.EqualTo(204));
             clientSessionFacade.RemoveClient(name);
         }
 
         [Test]
-        public void RemoveClient_NullInput_Returns()
+        public void RemoveClient_NullInput_Returns204()
         {
             const string name = null;
             clientSessionFacade.AddClient(name, "kpafdkn");
@@ -122,6 +122,5 @@ namespace Tests
             Assert.That(result.StatusCode, Is.EqualTo(204)); //nelogiška, bet logiška
             clientSessionFacade.RemoveClient(name);
         }
-        //gal verta pasikurt atskirus metodus addTwoClients ir RemoveClient/Cllients
     }
 }
