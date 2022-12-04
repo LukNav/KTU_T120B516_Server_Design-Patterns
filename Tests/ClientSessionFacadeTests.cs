@@ -119,7 +119,7 @@ namespace Tests
             clientSessionFacade.AddClient(name, "kpafdkn");
             NoContentResult result = (NoContentResult)clientSessionFacade.RemoveClient(name);
 
-            Assert.That(result.StatusCode, Is.EqualTo(204)); //nelogiška, bet logiška
+            Assert.That(result.StatusCode, Is.EqualTo(204));
             clientSessionFacade.RemoveClient(name);
         }
     }
