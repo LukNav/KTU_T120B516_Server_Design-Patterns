@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Server.GameLogic;
 using Server.Models;
 
@@ -46,20 +47,29 @@ namespace Tests
         [Test]
         public void AddClient_ThreeClients_ReturnsErrorMess()
         {
-            CreatedResult result1 = (CreatedResult) clientSessionFacade.AddClient("testName1", "dffdkrn").Result;
-            CreatedResult result2 = (CreatedResult) clientSessionFacade.AddClient("testName2", "htkfdkn").Result;
-            BadRequestObjectResult result3 = (BadRequestObjectResult) clientSessionFacade.AddClient("testName3", "afasvfr").Result;
+            clientSessionFacade.AddClient("testName1", "dffdkrn");
+            clientSessionFacade.AddClient("testName2", "htkfdkn");
+            BadRequestObjectResult result3 = (BadRequestObjectResult)clientSessionFacade.AddClient("testName3", "afasvfr").Result;
 
             Assert.That(result3.Value, Is.EqualTo("Two players are already added"));
             clientSessionFacade.RemoveClient("testName1");
             clientSessionFacade.RemoveClient("testName2");
+        }
+        [Test]
+        public void AddClient_NullClient_ReturnsErrorMess()
+        {
+            const string name = null;
+            CreatedResult result = (CreatedResult)clientSessionFacade.AddClient(name, "dffdkrn").Result;
+
+            Assert.That(result.Value, Is.EqualTo($"Player '{name}' was created"));
+            clientSessionFacade.RemoveClient(name);
         }
 
         [Test]
         public void RemoveClientFromOnePlayer_ValidInput_Returns204()
         {
             const string name = "testName";
-            CreatedResult client = (CreatedResult)clientSessionFacade.AddClient(name, "kpafdkn").Result;
+            clientSessionFacade.AddClient(name, "kpafdkn");
             NoContentResult result = (NoContentResult) clientSessionFacade.RemoveClient(name);
 
             Assert.That(result.StatusCode, Is.EqualTo(204));
@@ -70,8 +80,8 @@ namespace Tests
         {
             const string name1 = "testName1";
             const string name2 = "testName2";
-            CreatedResult client = (CreatedResult)clientSessionFacade.AddClient(name1, "kpafdkn").Result;
-            CreatedResult client2 = (CreatedResult)clientSessionFacade.AddClient(name2, "kpafdkn").Result;
+            clientSessionFacade.AddClient(name1, "kpafdkn");
+            clientSessionFacade.AddClient(name2, "kpafdkn");
             NoContentResult result = (NoContentResult)clientSessionFacade.RemoveClient(name1);
 
             Assert.That(result.StatusCode, Is.EqualTo(204));
@@ -83,8 +93,8 @@ namespace Tests
         {
             const string name1 = "testName1";
             const string name2 = "testName2";
-            CreatedResult client = (CreatedResult)clientSessionFacade.AddClient(name1, "kpafdkn").Result;
-            CreatedResult client2 = (CreatedResult)clientSessionFacade.AddClient(name2, "kpafdkn").Result;
+            clientSessionFacade.AddClient(name1, "kpafdkn");
+            clientSessionFacade.AddClient(name2, "kpafdkn");
             NoContentResult result = (NoContentResult)clientSessionFacade.RemoveClient(name2);
 
             Assert.That(result.StatusCode, Is.EqualTo(204));
@@ -95,14 +105,23 @@ namespace Tests
         public void RemoveClient_NotValidInput_Returns()
         {
             const string name = "testName";
-            CreatedResult client = (CreatedResult)clientSessionFacade.AddClient(name, "kpafdkn").Result;
-            NoContentResult result = (NoContentResult)clientSessionFacade.RemoveClient(name+"34");
+            clientSessionFacade.AddClient(name, "kpafdkn");
+            NoContentResult result = (NoContentResult)clientSessionFacade.RemoveClient(name + "34");
 
             Assert.That(result.StatusCode, Is.EqualTo(204)); //nelogiška, bet logiška
             clientSessionFacade.RemoveClient(name);
         }
 
+        [Test]
+        public void RemoveClient_NullInput_Returns()
+        {
+            const string name = null;
+            clientSessionFacade.AddClient(name, "kpafdkn");
+            NoContentResult result = (NoContentResult)clientSessionFacade.RemoveClient(name);
 
-
+            Assert.That(result.StatusCode, Is.EqualTo(204)); //nelogiška, bet logiška
+            clientSessionFacade.RemoveClient(name);
+        }
+        //gal verta pasikurt atskirus metodus addTwoClients ir RemoveClient/Cllients
     }
 }
