@@ -13,6 +13,12 @@ namespace Server.Controllers
         private GameSession _gameSession = GameSession.GetInstance();
         private ClientSessionFacade _clientSessionFacade = new ClientSessionFacade();
 
+        [HttpGet("health")]
+        public ActionResult<string> HealthCheck()
+        {
+            return Ok("Healthy");
+        }
+
         [HttpGet("Player/Create/{name}/{ip}")]
         public ActionResult<string> CreateClient(string name, string ip)
         {
