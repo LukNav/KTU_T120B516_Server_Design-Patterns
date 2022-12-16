@@ -60,6 +60,13 @@ namespace Server.Controllers
             return Ok();
         }
 
+        [HttpPost("GiveEnemyData/{name}")]
+        public async Task<IActionResult> GiveEnemyData(string name, [FromBody] GameState gameState)
+        {
+            Task.Run(() => _gameSession.GiveEnemyData(gameState, name));
+            return Ok();
+        }
+
         [HttpGet("NextLevel")]
         public async Task<IActionResult> NextLevel()
         {

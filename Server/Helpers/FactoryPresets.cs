@@ -22,9 +22,9 @@ namespace Server.Helpers
                 default:
                     return new GameLevel(
                         towerType : new Tower(new Position(0, 0), "Tower_1.png", 100),
-                        pawn1 : new Pawn(new Position(0, 0), "Villager_1.png", 40, 5, 1, 20, 0, PawnClass.Tier1),
-                        pawn2 : new Pawn(new Position(0, 0), "Villager_2.png", 30, 15, 2, 35, 5, PawnClass.Tier2),
-                        pawn3 : new Pawn(new Position(0, 0), "Villager_3.png", 50, 25, 3, 45, 9, PawnClass.Tier3));
+                        pawn1 : new Pawn(new Position(0, 0), "Soldier_1_1.png", 40, 5, 1, 20, 0, PawnClass.Tier1),
+                        pawn2 : new Pawn(new Position(0, 0), "Raider_1_1.png", 30, 15, 2, 35, 5, PawnClass.Tier2),
+                        pawn3 : new Pawn(new Position(0, 0), "Knight_1_1.png", 50, 25, 3, 45, 9, PawnClass.Tier3));
             }
                 
         }

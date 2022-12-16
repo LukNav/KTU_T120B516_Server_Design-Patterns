@@ -85,7 +85,7 @@ namespace Server.GameLogic
             //With adapter
             PlayerStateRequestsAdapter player2StateRequests = new PlayerStateRequestsAdapter(GameInfo.Player2);
             PlayerTwoState = player2StateRequests.GetState();
-
+            
             HttpRequests.PostRequest(GameInfo.Player1.IpAddress + "/BeginPlayersTurn", PlayerTwoState);
         }
 
@@ -147,6 +147,16 @@ namespace Server.GameLogic
             {
                 HttpRequests.PostRequest(player.IpAddress + endpoint, GameInfo);
             }
+        }
+
+        internal void GiveEnemyData(GameState enemyGameState, string name)
+        {
+            if (GameInfo.Player1.Name == name)
+                PlayerOneState = enemyGameState;
+            else if (GameInfo.Player2.Name == name)
+                PlayerTwoState = enemyGameState;
+
+            HttpRequests.PostRequest(GameInfo.GetOtherPlayer(name).IpAddress + "/SetPlayerData", enemyGameState);
         }
 
         internal void EndPlayersTurn(GameState gameState, string name)
