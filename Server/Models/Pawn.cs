@@ -2,10 +2,11 @@
 using System.Drawing;
 using System.Numerics;
 using System.Text.Json.Serialization;
+using WindowsFormsApplication.Controllers.VisitorPattern;
 
 namespace Server.Models
 {
-    public class Pawn
+    public class Pawn : Element
     {
         public Pawn(Position position, string imageName, int health, int cost, int speed, int damage, int armor, PawnClass tier)
         {
@@ -18,6 +19,7 @@ namespace Server.Models
             Armor = armor;
             SkippedTick = false;
             Tier = tier;
+            IsDead = false;
             switch (tier)
             {
                 case PawnClass.Tier1:
@@ -42,9 +44,15 @@ namespace Server.Models
         public int Damage { get; set; }
         public int Armor { get; set; }
         public bool SkippedTick { get; set; }
+        public bool IsDead { get; set; }
         public PawnClass Tier { get; set; }
         [JsonIgnore]
         public IMoveAlgorithm moveAlgorithm { get; set; }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
     public enum PawnClass
     {
