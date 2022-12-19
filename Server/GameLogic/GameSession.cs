@@ -176,9 +176,12 @@ namespace Server.GameLogic
             HttpResponseMessage httpResponseMessage = player1StateRequests.GetState();
             PlayerOneState = httpResponseMessage.Deserialize<GameState>();
 
+            HttpResponseMessage enemyStateHttpResponse = HttpRequests.GetRequest(GameInfo.Player1.IpAddress + "/GetEnemyGameState/");
+            PlayerTwoState = enemyStateHttpResponse.Deserialize<GameState>();
+
             //With adapter
-            PlayerStateRequestsAdapter player2StateRequests = new PlayerStateRequestsAdapter(GameInfo.Player2);
-            PlayerTwoState = player2StateRequests.GetState();
+            //PlayerStateRequestsAdapter player2StateRequests = new PlayerStateRequestsAdapter(GameInfo.Player2);
+            //PlayerTwoState = player2StateRequests.GetState();
 
             GameInfo.StartTime = DateTime.Now;
             GameInfo.GameLevel = levelIterator.Next();

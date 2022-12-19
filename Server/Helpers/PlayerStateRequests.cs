@@ -21,6 +21,12 @@ namespace Server.Helpers
             endpoint = "/GetGameState/";
         }
 
+        //public EnemyStateRequests(Player player)
+        //{
+        //    _player = player;
+        //    endpoint = "/GetEnemyGameState/";
+        //} would be idea, too tired to investigate
+
         public HttpResponseMessage GetState()
         {
             string getEndpoint = endpoint;
