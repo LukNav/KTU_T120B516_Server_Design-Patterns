@@ -34,9 +34,9 @@ namespace Server.Helpers
             return new GameLevelAbstractFactory
             (
                 towerFactory: new TowerFactory(200, "Tower_2.png"),
-                pawnFactory1: new PawnFactory(40, 5, 1, 20, 0, "Soldier_1_2.png", PawnClass.Tier1),
-                pawnFactory2: new PawnFactory(30, 15, 2, 35, 5, "Raider_1_2.png", PawnClass.Tier2),
-                pawnFactory3: new PawnFactory(50, 25, 3, 45, 9, "Knight_1_2.png", PawnClass.Tier3)
+                pawnFactory1: new PawnFactory(40,  "Soldier_1_2.png", PawnClass.Tier1),
+                pawnFactory2: new PawnFactory(30,  "Raider_1_2.png", PawnClass.Tier2),
+                pawnFactory3: new PawnFactory(50, "Knight_1_2.png", PawnClass.Tier3)
             ).CreateGameLevel();
         }
 
@@ -45,13 +45,10 @@ namespace Server.Helpers
             return new GameLevelAbstractFactory
             (
                 towerFactory: new TowerFactory(100, "Tower_3.png"),
-                pawnFactory1: new PawnFactory(60, 5, 1, 20, 0, "Soldier_1_3.png", PawnClass.Tier1),
-                pawnFactory2: new PawnFactory(50, 15, 2, 45, 5, "Raider_1_3.png", PawnClass.Tier2),
-                pawnFactory3: new PawnFactory(50, 25,3, 60, 9, "Knight_1_3.png", PawnClass.Tier3)
+                pawnFactory1: new PawnFactory(60, "Soldier_1_3.png", PawnClass.Tier1),
+                pawnFactory2: new PawnFactory(50, "Raider_1_3.png", PawnClass.Tier2),
+                pawnFactory3: new PawnFactory(50, "Knight_1_3.png", PawnClass.Tier3)
             ).CreateGameLevel();
         }
-
-
-
     }
 }

@@ -2,21 +2,20 @@
 using System.Drawing;
 using System.Numerics;
 using System.Text.Json.Serialization;
+using Server.GameLogic.FlyWeightPattern;
 using WindowsFormsApplication.Controllers.VisitorPattern;
+using Microsoft.Extensions.Hosting;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Server.Models
 {
     public class Pawn : Element
     {
-        public Pawn(Position position, string imageName, int health, int cost, int speed, int damage, int armor, PawnClass tier)
+        public Pawn(Position position, int health, PawnType pawnType, PawnClass tier)
         {
             Position = position;
-            ImageName = imageName;
             Health = health;
-            Cost = cost;
-            Speed = speed;
-            Damage = damage;
-            Armor = armor;
+            PawnType = pawnType;
             SkippedTick = false;
             Tier = tier;
             IsDead = false;
@@ -36,13 +35,38 @@ namespace Server.Models
             }
         }
 
+        public Pawn(Position position, string imageName, int health, int cost, int speed, int damage, int armor, PawnClass tier)
+        {
+            PawnType = new PawnType(imageName, cost, speed, damage, armor);
+            Position = position;
+            Health = health;
+            SkippedTick = false;
+            Tier = tier;
+            IsDead = false;
+            switch (tier)
+            {
+                case PawnClass.Tier1:
+                    moveAlgorithm = new ForwardMovement();
+                    break;
+                case PawnClass.Tier2:
+                    moveAlgorithm = new DiagonalMovement();
+                    break;
+                case PawnClass.Tier3:
+                    moveAlgorithm = new DelayedMovement();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public PawnType PawnType { get; set; }
         public Position Position { get; set; }
-        public string ImageName { get; set; }
+        public string ImageName { get => PawnType.ImageName; set => PawnType.ImageName = value; }
         public int Health { get; set; }
-        public int Cost { get; set; }
-        public int Speed { get; set; }
-        public int Damage { get; set; }
-        public int Armor { get; set; }
+        public int Cost { get => PawnType.Cost; set => PawnType.Cost = value; }
+        public int Speed { get => PawnType.Speed; set => PawnType.Speed = value; }
+        public int Damage { get => PawnType.Damage; set => PawnType.Damage = value; }
+        public int Armor { get => PawnType.Armor; set => PawnType.Armor = value; }
         public bool SkippedTick { get; set; }
         public bool IsDead { get; set; }
         public PawnClass Tier { get; set; }
