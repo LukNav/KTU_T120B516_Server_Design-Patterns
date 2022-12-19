@@ -19,5 +19,8 @@ namespace Server.GameLogic.FlyWeightPattern
             Armor = armor;
         }
 
+        public PawnType()
+        {
+        }
     }
 }

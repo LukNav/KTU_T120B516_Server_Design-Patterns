@@ -70,5 +70,13 @@ namespace Server.Helpers
                 PropertyNameCaseInsensitive = true
             });
         }
+
+        public static T Deserialize<T>(string obj)
+        {
+            return JsonSerializer.Deserialize<T>(obj, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        }
     }
 }

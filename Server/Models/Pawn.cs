@@ -6,11 +6,13 @@ using Server.GameLogic.FlyWeightPattern;
 using WindowsFormsApplication.Controllers.VisitorPattern;
 using Microsoft.Extensions.Hosting;
 using static System.Net.Mime.MediaTypeNames;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Server.Models
 {
     public class Pawn : Element
     {
+        public Pawn() { PawnType = new PawnType(); moveAlgorithm = new ForwardMovement(); }
         public Pawn(Position position, int health, PawnType pawnType, PawnClass tier)
         {
             Position = position;
