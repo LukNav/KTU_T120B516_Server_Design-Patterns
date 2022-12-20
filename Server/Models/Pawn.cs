@@ -7,6 +7,7 @@ using WindowsFormsApplication.Controllers.VisitorPattern;
 using Microsoft.Extensions.Hosting;
 using static System.Net.Mime.MediaTypeNames;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Server.GameLogic.StatePattern;
 
 namespace Server.Models
 {
@@ -45,6 +46,7 @@ namespace Server.Models
             SkippedTick = false;
             Tier = tier;
             IsDead = false;
+            CurrentState = new PlayerState(this);
             switch (tier)
             {
                 case PawnClass.Tier1:
@@ -61,6 +63,7 @@ namespace Server.Models
             }
         }
 
+        public State CurrentState { get; set; }
         public PawnType PawnType { get; set; }
         public Position Position { get; set; }
         public string ImageName { get => PawnType.ImageName; set => PawnType.ImageName = value; }
